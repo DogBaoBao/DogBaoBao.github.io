@@ -56,19 +56,19 @@
   };
 </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
-<meta name="keywords" content="hexo,blog,博客">
+  <meta name="description" content="上周同事负责的同步服务出现宕机后，由于在忙于另一个重要的项目，线上没有及时处理，后发现同步数据丢失。我趁机了解了下我们的同步逻辑并对这次异常做一个简单的总结。异常描述线上我们基于otter的msyql数据同步服务出错，出错后会停止数据同步（我们后续的配置没有从中心节点同步到私有云节点），导致了私有云无法正常启动部分服务。">
+<meta name="keywords" content="otter,canal,mysql,binlog,阿里云RDS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://blog.funnycode.cn/hexo/hello-world/index.html">
+<meta property="og:title" content="阿里云RDS采坑记录01">
+<meta property="og:url" content="https://blog.funnycode.cn/数据同步/2019-09-22-aliyun-rds-error-01/index.html">
 <meta property="og:site_name" content="Ironcity&#39;s Blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="上周同事负责的同步服务出现宕机后，由于在忙于另一个重要的项目，线上没有及时处理，后发现同步数据丢失。我趁机了解了下我们的同步逻辑并对这次异常做一个简单的总结。异常描述线上我们基于otter的msyql数据同步服务出错，出错后会停止数据同步（我们后续的配置没有从中心节点同步到私有云节点），导致了私有云无法正常启动部分服务。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-22T06:44:43.002Z">
+<meta property="og:updated_time" content="2019-09-23T02:54:00.088Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
-  <link rel="canonical" href="https://blog.funnycode.cn/hexo/hello-world/">
+<meta name="twitter:title" content="阿里云RDS采坑记录01">
+<meta name="twitter:description" content="上周同事负责的同步服务出现宕机后，由于在忙于另一个重要的项目，线上没有及时处理，后发现同步数据丢失。我趁机了解了下我们的同步逻辑并对这次异常做一个简单的总结。异常描述线上我们基于otter的msyql数据同步服务出错，出错后会停止数据同步（我们后续的配置没有从中心节点同步到私有云节点），导致了私有云无法正常启动部分服务。">
+  <link rel="canonical" href="https://blog.funnycode.cn/数据同步/2019-09-22-aliyun-rds-error-01/">
 
 
 <script id="page-configurations">
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title>Hello World | Ironcity's Blog</title>
+  <title>阿里云RDS采坑记录01 | Ironcity's Blog</title>
   
 
 
@@ -238,7 +238,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/hexo/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/数据同步/2019-09-22-aliyun-rds-error-01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="铁城">
@@ -250,7 +250,7 @@
       <meta itemprop="name" content="Ironcity's Blog">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Hello World
+        <h1 class="post-title" itemprop="name headline">阿里云RDS采坑记录01
 
           
         </h1>
@@ -266,7 +266,7 @@
                 
               
 
-              <time title="创建时间：2018-01-11 23:54:11" itemprop="dateCreated datePublished" datetime="2018-01-11T23:54:11+08:00">2018-01-11</time>
+              <time title="创建时间：2019-09-22 17:33:11" itemprop="dateCreated datePublished" datetime="2019-09-22T17:33:11+08:00">2019-09-22</time>
             </span>
           
             
@@ -277,7 +277,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-22 14:44:43" itemprop="dateModified" datetime="2019-09-22T14:44:43+08:00">2019-09-22</time>
+                <time title="修改时间：2019-09-23 10:54:00" itemprop="dateModified" datetime="2019-09-23T10:54:00+08:00">2019-09-23</time>
               </span>
             
           
@@ -287,7 +287,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据同步/" itemprop="url" rel="index"><span itemprop="name">数据同步</span></a></span>
 
                 
                 
@@ -314,19 +314,39 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><a id="more"></a>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+        <p>上周同事负责的同步服务出现宕机后，由于在忙于另一个重要的项目，线上没有及时处理，后发现同步数据丢失。我趁机了解了下我们的同步逻辑并对这次异常做一个简单的总结。</p><h1 id="异常描述"><a href="#异常描述" class="headerlink" title="异常描述"></a>异常描述</h1><p>线上我们基于otter的msyql数据同步服务出错，出错后会停止数据同步（我们后续的配置没有从中心节点同步到私有云节点），导致了私有云无法正常启动部分服务。</p><a id="more"></a>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h1 id="发生背景"><a href="#发生背景" class="headerlink" title="发生背景"></a>发生背景</h1><ul>
+<li>我们分阿里云（中心节点），北京私有云节点，广州私有云节点等，数据会从中心节点同步到私有云节点</li>
+<li>中心节点使用了阿里云的RDS MySQL数据库，私有云节点采用自己搭建的MySQL</li>
+<li>采用基于otter的数据同步服务（otter基于canal）</li>
+<li>我们采用了xxl-job来做定时调度，因为之前认为它只有DML操作，我们的同步服务没有对它的DDL操作做处理</li>
+<li>xxl-job的机器配置的较低，数据量变大之后XXL_JOB_QRTZ_TRIGGER_LOG的查询语句运行较慢，我们给它增加了个索引</li>
+<li>我们的同步服务异常后，会停止数据同步</li>
+<li>A服务发布，在中心节点加了配置，私有云节点启动失败</li>
+<li>查询发现同步服务异常，无法通过binlog的偏移量找到记录，导致无法把中心节点加了的配置同步到私有云节点</li>
+<li>我们是在一天后对这个问题做的处理</li>
+</ul>
+<blockquote>
+<p>xxl-job的SQL</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> t.id, t.job_group, t.job_id, t.executor_address, t.executor_handler</span><br><span class="line">  , t.executor_param, t.executor_sharding_param, t.executor_fail_retry_count, t.trigger_time, t.trigger_code</span><br><span class="line">  , t.trigger_msg, t.handle_time, t.handle_code, t.handle_msg</span><br><span class="line"><span class="keyword">FROM</span> XXL_JOB_QRTZ_TRIGGER_LOG t</span><br><span class="line"><span class="keyword">WHERE</span> t.job_group = ?</span><br><span class="line">  <span class="keyword">AND</span> t.job_id = ?</span><br><span class="line">  <span class="keyword">AND</span> t.trigger_time &gt;= ?</span><br><span class="line">  <span class="keyword">AND</span> t.trigger_time &lt;= ?</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">DESC</span></span><br><span class="line"><span class="keyword">LIMIT</span> ?, ?</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>mysql查看binlog</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// 查看binlog文件列表</span><br><span class="line">mysql&gt; show binary logs;</span><br><span class="line">+<span class="comment">------------------+-----------+</span></span><br><span class="line">| Log_name         | File_size |</span><br><span class="line">+<span class="comment">------------------+-----------+</span></span><br><span class="line">| mysql-bin.000001 |    107853 |</span><br><span class="line">+<span class="comment">------------------+-----------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 查看<span class="keyword">binlog</span>状态</span><br><span class="line">mysql&gt; <span class="keyword">show</span> <span class="keyword">master</span> <span class="keyword">status</span>;</span><br><span class="line">+<span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line">| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |</span><br><span class="line">+<span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line">| mysql-bin.000001 |   107853 |              |                  |                   |</span><br><span class="line">+<span class="comment">------------------+----------+--------------+------------------+-------------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<h1 id="解决对策"><a href="#解决对策" class="headerlink" title="解决对策"></a>解决对策</h1><p>因为同步服务是由于binlog的偏移量问题而失败，偏移量是通过zk节点去获取的，我们去MySQL查询了最新的可用的偏移量，设置到了zk的指定节点，让同步服务正常运行。（我们的配置同步在新偏移量之后，所以启动后能够从中心节点同步到私有云节点）</p>
+<p>这个是临时的解决方案，我们没法找到之前的binlog的完整记录</p>
+<h1 id="思考问题"><a href="#思考问题" class="headerlink" title="思考问题"></a>思考问题</h1><h2 id="为什么过了一天，同步服务会启动失败？"><a href="#为什么过了一天，同步服务会启动失败？" class="headerlink" title="为什么过了一天，同步服务会启动失败？"></a>为什么过了一天，同步服务会启动失败？</h2><p>同步服务失败，因为binlog找不到。MySQL我们自己安装的话binlog配置默认是不清理的，但是RDS上不是这样的。<br>下面是RDS默认配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- 保留时长：默认值为18，表示实例空间内默认保存最近18个小时内的Binlog文件，18个小时之前的日志将在备份后（需要开启日志备份）清理。保留时长可选范围值为0~7*24小时。</span><br><span class="line">- 空间使用率不超过：默认值为30%，表示本地Binlog空间使用率大于30%时，系统会从最早的Binlog开始清理，直到空间使用率低于30%。空间使用率不超过可选范围值为0 - 50% 。</span><br><span class="line">- 可用空间保护，默认开启该功能，表示当实例总空间使用率超过80%或实例剩余可用空间不足5GB时，会强制从最早的Binlog开始清理，直到总空间使用率降到80%以下且实例剩余可用空间大于5GB。</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<p>我们可以看到RDS默认保留时间小于一天，所以我们停了一天后再度开启，导致binlog位置找不到，只能从最新的偏移量同步。这里首先把保留时长调至3天（我们的同步服务不可能停3天，在某些改造项目，同步服务可能会停1-2天），这个需要根据实际场景去设置合理的值。</p>
+<h2 id="binlog不在了，如何补救？"><a href="#binlog不在了，如何补救？" class="headerlink" title="binlog不在了，如何补救？"></a>binlog不在了，如何补救？</h2><p>阿里云会把binlog保存到OSS，从OSS下载回来binlog，然后把binlog设置到MySQL指定位置。</p>
+<p>本机位置是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/mysql/data</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -342,11 +362,15 @@
           
           <div class="post-tags">
             
-              <a href="/tags/hexo/" rel="tag"># hexo</a>
+              <a href="/tags/otter/" rel="tag"># otter</a>
             
-              <a href="/tags/blog/" rel="tag"># blog</a>
+              <a href="/tags/canal/" rel="tag"># canal</a>
             
-              <a href="/tags/博客/" rel="tag"># 博客</a>
+              <a href="/tags/mysql/" rel="tag"># mysql</a>
+            
+              <a href="/tags/binlog/" rel="tag"># binlog</a>
+            
+              <a href="/tags/阿里云RDS/" rel="tag"># 阿里云RDS</a>
             
           </div>
         
@@ -356,15 +380,15 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
+                <a href="/hexo/hello-world/" rel="next" title="Hello World">
+                  <i class="fa fa-chevron-left"></i> Hello World
+                </a>
+              
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/数据同步/2019-09-22-aliyun-rds-error-01/" rel="prev" title="阿里云RDS采坑记录01">
-                  阿里云RDS采坑记录01 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -416,7 +440,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#异常描述"><span class="nav-number">1.</span> <span class="nav-text">异常描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发生背景"><span class="nav-number">2.</span> <span class="nav-text">发生背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决对策"><span class="nav-number">3.</span> <span class="nav-text">解决对策</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思考问题"><span class="nav-number">4.</span> <span class="nav-text">思考问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么过了一天，同步服务会启动失败？"><span class="nav-number">4.1.</span> <span class="nav-text">为什么过了一天，同步服务会启动失败？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#binlog不在了，如何补救？"><span class="nav-number">4.2.</span> <span class="nav-text">binlog不在了，如何补救？</span></a></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -603,7 +627,7 @@
       repo: 'gitalk',
       owner: 'DogBaoBao',
       admin: ['DogBaoBao'],
-      id: '46cc1602c9b5d2423e6343eba5657334',
+      id: '95164fa984ce409d69bd83a6f15d5767',
         language: 'zh-CN',
       
       distractionFreeMode: 'true'
