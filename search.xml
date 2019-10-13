@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>类加载</title>
+      <link href="/%E7%B1%BB%E5%8A%A0%E8%BD%BD/2019-10-07-class-loader-01/"/>
+      <url>/%E7%B1%BB%E5%8A%A0%E8%BD%BD/2019-10-07-class-loader-01/</url>
+      
+        <content type="html"><![CDATA[<h1 id="JVM类加载器流程"><a href="#JVM类加载器流程" class="headerlink" title="JVM类加载器流程"></a>JVM类加载器流程</h1><p>java语言系统内置了众多类加载器，从一定程度上讲，只存在两种不同的类加载器：一种是启动类加载器，此类加载由C++实现，是JVM的一部分；另一种就是所有其他的类加载器，这些类加载器均由java实现，且全部继承自<code>java.lang.ClassLoader</code></p><p>Bootstrap ClassLoader 启动类加载器，最顶层的加载类，由C++实现，负责加载%JAVA_HOME%/lib目录中或-Xbootclasspath中参数指定的路径中的，并且是虚拟机识别的（按名称）类库<br>Extention ClassLoader 扩展类加载器，由启动类加载器加载，实现为<code>sun.misc.Launcher$ExtClassLoader</code>，负责加载目录%JRE_HOME%/lib/ext目录中或-Djava.ext.dirs中参数指定的路径中的jar包和class文件<br>Application ClassLoader 应用类加载器，也称为系统类加载器(System ClassLoader，可由<code>java.lang.ClassLoader.getSystemClassLoader()</code>获取)，实现为<code>sun.misc.Launcher$AppClassLoader</code>，由启动类加载器加载，负责加载当前应用classpath下的所有类</p><a id="more"></a><h1 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h1><h1 id="自定义Classloader"><a href="#自定义Classloader" class="headerlink" title="自定义Classloader"></a>自定义Classloader</h1><h1 id="Class-forName和ClassLoader-loadClass"><a href="#Class-forName和ClassLoader-loadClass" class="headerlink" title="Class.forName和ClassLoader.loadClass"></a>Class.forName和ClassLoader.loadClass</h1><blockquote><p>这里讨论的Class.forName是Class类的方法public static Class&lt;?&gt; forName(String className) throws ClassNotFoundException</p></blockquote><p>这里讨论的ClassLoader.loadClass是ClassLoader类的方法public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException</p><h1 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h1><h1 id="Spring加载"><a href="#Spring加载" class="headerlink" title="Spring加载"></a>Spring加载</h1><h1 id="破坏双亲委派模型"><a href="#破坏双亲委派模型" class="headerlink" title="破坏双亲委派模型"></a>破坏双亲委派模型</h1>]]></content>
+      
+      
+      <categories>
+          
+          <category> 类加载 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> classloader </tag>
+            
+            <tag> 总结 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>多个springboot运行在同一个JVM</title>
       <link href="/springboot/2019-09-28-springboot-one-jvm/"/>
       <url>/springboot/2019-09-28-springboot-one-jvm/</url>
@@ -20,11 +47,11 @@
       
         <tags>
             
+            <tag> classloader </tag>
+            
             <tag> 原创 </tag>
             
             <tag> springboot </tag>
-            
-            <tag> classloader </tag>
             
             <tag> 记录 </tag>
             
@@ -84,11 +111,11 @@
             
             <tag> 原创 </tag>
             
+            <tag> 记录 </tag>
+            
             <tag> transaction </tag>
             
             <tag> 事务 </tag>
-            
-            <tag> 记录 </tag>
             
         </tags>
       

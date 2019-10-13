@@ -14,7 +14,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-self-32x32.ico?v=7.4.0">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-self-16x16.ico?v=7.4.0">
   <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
-  <link rel="alternate" href="/atom.xml" title="Ironcity's Blog" type="application/atom+xml">
+  <link rel="alternate" href="/atom.xml" title="DogBaoBao's Blog" type="application/atom+xml">
 
 <link rel="stylesheet" href="/css/main.css?v=7.4.0">
 
@@ -57,11 +57,11 @@
 </script>
 
   <meta name="description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。 问题说明伪代码如下：123456789101112131415161718192021222324class CServi">
-<meta name="keywords" content="原创,transaction,事务,记录">
+<meta name="keywords" content="原创,记录,transaction,事务">
 <meta property="og:type" content="article">
 <meta property="og:title" content="事务采坑记录01">
 <meta property="og:url" content="https://blog.funnycode.cn/spring/2019-09-24-transaction-action-01/index.html">
-<meta property="og:site_name" content="Ironcity&#39;s Blog">
+<meta property="og:site_name" content="DogBaoBao&#39;s Blog">
 <meta property="og:description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。 问题说明伪代码如下：123456789101112131415161718192021222324class CServi">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2019/png/327432/1569381660979-c364f0c7-4a84-46e8-bbd7-2d4d81207f52.png">
@@ -84,7 +84,7 @@
   };
 </script>
 
-  <title>事务采坑记录01 | Ironcity's Blog</title>
+  <title>事务采坑记录01 | DogBaoBao's Blog</title>
   
 
 
@@ -142,7 +142,7 @@
     <div>
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Ironcity's Blog</span>
+        <span class="site-title">DogBaoBao's Blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -270,13 +270,13 @@
     <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/spring/2019-09-24-transaction-action-01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="铁城">
-      <meta itemprop="description" content="知行合一，趣味编码">
+      <meta itemprop="name" content="包包">
+      <meta itemprop="description" content="趣味编码, 快乐生活">
       <meta itemprop="image" content="/uploads/avatar.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ironcity's Blog">
+      <meta itemprop="name" content="DogBaoBao's Blog">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">事务采坑记录01
@@ -456,11 +456,11 @@
             
               <a href="/tags/原创/" rel="tag"># 原创</a>
             
+              <a href="/tags/记录/" rel="tag"># 记录</a>
+            
               <a href="/tags/transaction/" rel="tag"># transaction</a>
             
               <a href="/tags/事务/" rel="tag"># 事务</a>
-            
-              <a href="/tags/记录/" rel="tag"># 记录</a>
             
           </div>
         
@@ -543,16 +543,16 @@
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image"
       src="/uploads/avatar.jpeg"
-      alt="铁城">
-  <p class="site-author-name" itemprop="name">铁城</p>
-  <div class="site-description" itemprop="description">知行合一，趣味编码</div>
+      alt="包包">
+  <p class="site-author-name" itemprop="name">包包</p>
+  <div class="site-description" itemprop="description">趣味编码, 快乐生活</div>
 </div>
   <nav class="site-state motion-element">
       <div class="site-state-item site-state-posts">
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -565,7 +565,7 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -578,7 +578,7 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -637,7 +637,7 @@
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">铁城</span>
+  <span class="author" itemprop="copyrightHolder">包包</span>
 </div>
 
         
