@@ -62,13 +62,13 @@
       <category term="springboot" scheme="https://blog.funnycode.cn/categories/springboot/"/>
     
     
-      <category term="classloader" scheme="https://blog.funnycode.cn/tags/classloader/"/>
-    
       <category term="原创" scheme="https://blog.funnycode.cn/tags/%E5%8E%9F%E5%88%9B/"/>
     
-      <category term="springboot" scheme="https://blog.funnycode.cn/tags/springboot/"/>
+      <category term="classloader" scheme="https://blog.funnycode.cn/tags/classloader/"/>
     
       <category term="记录" scheme="https://blog.funnycode.cn/tags/%E8%AE%B0%E5%BD%95/"/>
+    
+      <category term="springboot" scheme="https://blog.funnycode.cn/tags/springboot/"/>
     
   </entry>
   
@@ -91,11 +91,11 @@
       <category term="netty" scheme="https://blog.funnycode.cn/categories/netty/"/>
     
     
+      <category term="netty" scheme="https://blog.funnycode.cn/tags/netty/"/>
+    
       <category term="原创" scheme="https://blog.funnycode.cn/tags/%E5%8E%9F%E5%88%9B/"/>
     
       <category term="netty客户端" scheme="https://blog.funnycode.cn/tags/netty%E5%AE%A2%E6%88%B7%E7%AB%AF/"/>
-    
-      <category term="netty" scheme="https://blog.funnycode.cn/tags/netty/"/>
     
       <category term="学习" scheme="https://blog.funnycode.cn/tags/%E5%AD%A6%E4%B9%A0/"/>
     
@@ -122,11 +122,11 @@
     
       <category term="原创" scheme="https://blog.funnycode.cn/tags/%E5%8E%9F%E5%88%9B/"/>
     
-      <category term="记录" scheme="https://blog.funnycode.cn/tags/%E8%AE%B0%E5%BD%95/"/>
-    
       <category term="transaction" scheme="https://blog.funnycode.cn/tags/transaction/"/>
     
       <category term="事务" scheme="https://blog.funnycode.cn/tags/%E4%BA%8B%E5%8A%A1/"/>
+    
+      <category term="记录" scheme="https://blog.funnycode.cn/tags/%E8%AE%B0%E5%BD%95/"/>
     
   </entry>
   
