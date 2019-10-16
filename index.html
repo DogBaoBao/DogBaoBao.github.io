@@ -303,7 +303,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-13 13:09:52" itemprop="dateModified" datetime="2019-10-13T13:09:52+08:00">2019-10-13</time>
+                <time title="修改时间：2019-10-16 13:34:49" itemprop="dateModified" datetime="2019-10-16T13:34:49+08:00">2019-10-16</time>
               </span>
             
           
@@ -332,7 +332,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="JVM类加载器流程"><a href="#JVM类加载器流程" class="headerlink" title="JVM类加载器流程"></a>JVM类加载器流程</h1><p>java语言系统内置了众多类加载器，从一定程度上讲，只存在两种不同的类加载器：一种是启动类加载器，此类加载由C++实现，是JVM的一部分；另一种就是所有其他的类加载器，这些类加载器均由java实现，且全部继承自<code>java.lang.ClassLoader</code></p><p>Bootstrap ClassLoader 启动类加载器，最顶层的加载类，由C++实现，负责加载%JAVA_HOME%/lib目录中或-Xbootclasspath中参数指定的路径中的，并且是虚拟机识别的（按名称）类库<br>Extention ClassLoader 扩展类加载器，由启动类加载器加载，实现为<code>sun.misc.Launcher$ExtClassLoader</code>，负责加载目录%JRE_HOME%/lib/ext目录中或-Djava.ext.dirs中参数指定的路径中的jar包和class文件<br>Application ClassLoader 应用类加载器，也称为系统类加载器(System ClassLoader，可由<code>java.lang.ClassLoader.getSystemClassLoader()</code>获取)，实现为<code>sun.misc.Launcher$AppClassLoader</code>，由启动类加载器加载，负责加载当前应用classpath下的所有类</p>
+          <p>最近调研了同一个 <code>JVM</code> 启动多个 <code>Springboot</code> 服务的操作，涉及到类加载，springboot内嵌tomcat，spring子容器等，在这篇文章做一个大而不一定全的总结。</p><h1 id="JVM类加载"><a href="#JVM类加载" class="headerlink" title="JVM类加载"></a>JVM类加载</h1><blockquote>
+<p>类加载机制：虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型</p>
+</blockquote>
           <!--noindex-->
           
             <div class="post-button text-center">
