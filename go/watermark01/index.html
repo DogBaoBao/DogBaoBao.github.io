@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-self-32x32.ico?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-self-16x16.ico?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="DogBaoBao's Blog" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="既然开始写博客，就需要给图片加水印，之前用Java写过一个已经找不到影踪，只记得Java写的还比较麻烦。最近又在重温go的内容，就顺便用go写了下图片加水印的代码。输出文字图片效果图：代码依赖 github.com/golang/freetype 仓库12345678910type WaterMark struct &amp;#123;    // freetype的参数	width    int">
+<meta name="keywords" content="go,水印,image">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图片添加水印">
+<meta property="og:url" content="https://blog.funnycode.cn/go/watermark01/index.html">
+<meta property="og:site_name" content="DogBaoBao&#39;s Blog">
+<meta property="og:description" content="既然开始写博客，就需要给图片加水印，之前用Java写过一个已经找不到影踪，只记得Java写的还比较麻烦。最近又在重温go的内容，就顺便用go写了下图片加水印的代码。输出文字图片效果图：代码依赖 github.com/golang/freetype 仓库12345678910type WaterMark struct &amp;#123;    // freetype的参数	width    int">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://blog.funnycode.cn/.cn//wm-1571388899.png">
+<meta property="og:image" content="https://blog.funnycode.cn/.cn//test.jpg">
+<meta property="og:image" content="https://blog.funnycode.cn/.cn//test-wm-1571390223.jpg">
+<meta property="og:updated_time" content="2019-10-18T09:35:13.955Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图片添加水印">
+<meta name="twitter:description" content="既然开始写博客，就需要给图片加水印，之前用Java写过一个已经找不到影踪，只记得Java写的还比较麻烦。最近又在重温go的内容，就顺便用go写了下图片加水印的代码。输出文字图片效果图：代码依赖 github.com/golang/freetype 仓库12345678910type WaterMark struct &amp;#123;    // freetype的参数	width    int">
+<meta name="twitter:image" content="https://blog.funnycode.cn/.cn//wm-1571388899.png">
+  <link rel="canonical" href="https://blog.funnycode.cn/go/watermark01/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>图片添加水印 | DogBaoBao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0642718bc3eb379eadb47feaef4020ca";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/DogBaoBao" target="_blank">
+      <img style="position: fixed; top: 0;right: 0;border: 0;z-index: 1" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1">
+    </a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">DogBaoBao's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/go/watermark01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="包包">
+      <meta itemprop="description" content="趣味编码, 快乐生活">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DogBaoBao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">图片添加水印
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-16 16:07:54" itemprop="dateCreated datePublished" datetime="2019-10-16T16:07:54+08:00">2019-10-16</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-18 17:35:13" itemprop="dateModified" datetime="2019-10-18T17:35:13+08:00">2019-10-18</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>既然开始写博客，就需要给图片加水印，之前用Java写过一个已经找不到影踪，只记得Java写的还比较麻烦。最近又在重温go的内容，就顺便用go写了下图片加水印的代码。</p><h1 id="输出文字图片"><a href="#输出文字图片" class="headerlink" title="输出文字图片"></a>输出文字图片</h1><h2 id="效果图："><a href="#效果图：" class="headerlink" title="效果图："></a>效果图：</h2><p><img src="/.cn//wm-1571388899.png" alt="效果图："></p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>依赖 <code>github.com/golang/freetype</code> 仓库</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> WaterMark <span class="keyword">struct</span> &#123;</span><br><span class="line">    <span class="comment">// freetype的参数</span></span><br><span class="line">	width    <span class="keyword">int</span>     <span class="comment">// 图片的大小 宽度</span></span><br><span class="line">	height   <span class="keyword">int</span>     <span class="comment">// 图片的大小 高度</span></span><br><span class="line">	fontSize <span class="keyword">float64</span> <span class="comment">// 字体尺寸</span></span><br><span class="line">	fontDPI  <span class="keyword">float64</span> <span class="comment">//   屏幕每英寸的分辨率</span></span><br><span class="line">	fontFile <span class="keyword">string</span>  <span class="comment">// 需要使用的字体文件</span></span><br><span class="line"></span><br><span class="line">	srcPath <span class="keyword">string</span> <span class="comment">// 原文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wm *WaterMark)</span> <span class="title">CreateStringPic</span><span class="params">(srcPath, content <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="comment">// 新建一个 指定大小的RGBA位图</span></span><br><span class="line">	img := image.NewNRGBA(image.Rect(<span class="number">0</span>, <span class="number">0</span>, wm.width, wm.height))</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 画背景</span></span><br><span class="line">	<span class="comment">//for y := 0; y &lt; wm.height; y++ &#123;</span></span><br><span class="line">	<span class="comment">//	for x := 0; x &lt; wm.width; x++ &#123;</span></span><br><span class="line">	<span class="comment">//		// 设置某个点的颜色，依次是 RGBA，变化的</span></span><br><span class="line">	<span class="comment">//		img.Set(x, y, color.RGBA&#123;255, 255, 255, 255&#125;)</span></span><br><span class="line">	<span class="comment">//	&#125;</span></span><br><span class="line">	<span class="comment">//&#125;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 读字体数据</span></span><br><span class="line">	fontBytes, err := ioutil.ReadFile(wm.fontFile)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	font, err := freetype.ParseFont(fontBytes)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	c := freetype.NewContext()</span><br><span class="line">	c.SetDPI(wm.fontDPI)</span><br><span class="line">	c.SetFont(font)</span><br><span class="line">	c.SetFontSize(wm.fontSize)</span><br><span class="line">	c.SetClip(img.Bounds())</span><br><span class="line">	c.SetDst(img)</span><br><span class="line">	c.SetSrc(image.Black)</span><br><span class="line"></span><br><span class="line">	pt := freetype.Pt(<span class="number">15</span>, <span class="number">30</span>+<span class="keyword">int</span>(c.PointToFixed(wm.fontSize)&gt;&gt;<span class="number">8</span>)) <span class="comment">// 字出现的位置</span></span><br><span class="line"></span><br><span class="line">	_, err = c.DrawString(content, pt)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	create(makePath(srcPath), img)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面例子的文字图片输出是我的博客地址，你可以替换成自己想要的内容。</p>
+<p>这个例子用到了 freetype 包</p>
+<p>官方字体格式的说明如下：</p>
+<blockquote>
+<p>Drawing Font Glyphs<br>To draw a font glyph in blue starting from a point p, draw with an image.ColorImage source and an image.Alpha mask. For simplicity, we aren’t performing any sub-pixel positioning or rendering, or correcting for a font’s height above a baseline.</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Context)</span> <span class="title">DrawString</span><span class="params">(s <span class="keyword">string</span>, p fixed.Point26_6)</span> <span class="params">(fixed.Point26_6, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">// ......</span></span><br><span class="line">	<span class="keyword">for</span> _, <span class="keyword">rune</span> := <span class="keyword">range</span> s &#123;</span><br><span class="line">		<span class="comment">// ......</span></span><br><span class="line">		advanceWidth, mask, offset, err := c.glyph(index, p) <span class="comment">// 最后会进入下个方法</span></span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> fixed.Point26_6&#123;&#125;, err</span><br><span class="line">		&#125;</span><br><span class="line">		p.X += advanceWidth</span><br><span class="line">		glyphRect := mask.Bounds().Add(offset)</span><br><span class="line">		dr := c.clip.Intersect(glyphRect)</span><br><span class="line">		<span class="keyword">if</span> !dr.Empty() &#123;</span><br><span class="line">			mp := image.Point&#123;<span class="number">0</span>, dr.Min.Y - glyphRect.Min.Y&#125;</span><br><span class="line">			draw.DrawMask(c.dst, dr, c.src, image.ZP, mask, mp, draw.Over)</span><br><span class="line">		&#125;</span><br><span class="line">		prev, hasPrev = index, <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> p, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Context)</span> <span class="title">rasterize</span><span class="params">(glyph truetype.Index, fx, fy fixed.Int26_6)</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">	fixed.Int26_6, *image.Alpha, image.Point, error)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// ......</span></span><br><span class="line">	a := image.NewAlpha(image.Rect(<span class="number">0</span>, <span class="number">0</span>, xmax-xmin, ymax-ymin))</span><br><span class="line">	c.r.Rasterize(raster.NewAlphaSrcPainter(a))</span><br><span class="line">	<span class="keyword">return</span> c.glyphBuf.AdvanceWidth, a, image.Point&#123;xmin, ymin&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看源码后会发现用到的是 <code>image.NewAlpha</code> 和 <code>draw.DrawMask()</code>，这块内容会在结尾有网址查看</p>
+<h1 id="输出图片水印"><a href="#输出图片水印" class="headerlink" title="输出图片水印"></a>输出图片水印</h1><h2 id="原图："><a href="#原图：" class="headerlink" title="原图："></a>原图：</h2><p><img src="/.cn//test.jpg" alt="原图"></p>
+<h2 id="效果图：-1"><a href="#效果图：-1" class="headerlink" title="效果图："></a>效果图：</h2><p><img src="/.cn//test-wm-1571390223.jpg" alt="效果图："></p>
+<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wm *WaterMark)</span> <span class="title">AddImage</span><span class="params">(wmPath <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	srcImg := getImage(wm.srcPath)</span><br><span class="line"></span><br><span class="line">	b := srcImg.Bounds()</span><br><span class="line"></span><br><span class="line">	dst := image.NewNRGBA(b)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 绘入原始图片</span></span><br><span class="line">	draw.Draw(dst, b, srcImg, image.ZP, draw.Src)</span><br><span class="line"></span><br><span class="line">	waterMark := getImage(wmPath)</span><br><span class="line"></span><br><span class="line">	maxW := b.Max.X / <span class="number">5</span></span><br><span class="line">	maxH := b.Max.Y / <span class="number">4</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 会出现多个水印，offset位置信息</span></span><br><span class="line">	<span class="keyword">for</span> offsetWidth := <span class="number">0</span>; offsetWidth &lt; b.Max.X; offsetWidth += maxW &#123;</span><br><span class="line">		<span class="keyword">for</span> offsetHeight := <span class="number">0</span>; offsetHeight &lt; b.Max.X; offsetHeight += maxH &#123;</span><br><span class="line">			offset := image.Pt(offsetWidth, offsetHeight)</span><br><span class="line">			draw.Draw(dst, waterMark.Bounds().Add(offset), waterMark, image.ZP, draw.Over)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 固定位置</span></span><br><span class="line">	<span class="comment">//offset := image.Pt((b.Bounds().Max.X-waterMark.Bounds().Max.X)/2, (b.Bounds().Max.Y-waterMark.Bounds().Max.Y)/2)</span></span><br><span class="line">	<span class="comment">//draw.Draw(dst, waterMark.Bounds().Add(offset), waterMark, image.ZP, draw.Over)</span></span><br><span class="line"></span><br><span class="line">	create(makePath(wm.srcPath), dst)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="缩放图片"><a href="#缩放图片" class="headerlink" title="缩放图片"></a>缩放图片</h1><p>缩放图片参考的是 <code>github.com/nfnt/resize</code> 包，比较简单，这里就不上效果了。</p>
+<h2 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wm *WaterMark)</span> <span class="title">Resize</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	src := getImage(wm.srcPath)</span><br><span class="line"></span><br><span class="line">	b := src.Bounds()</span><br><span class="line">	width := b.Max.X</span><br><span class="line">	height := b.Max.Y</span><br><span class="line"></span><br><span class="line">	w, h := calculateRatioFit(width, height)</span><br><span class="line">	<span class="comment">// 调用resize库进行图片缩放</span></span><br><span class="line">	dst := resize.Resize(<span class="keyword">uint</span>(w), <span class="keyword">uint</span>(h), src, resize.Lanczos3)</span><br><span class="line"></span><br><span class="line">	create(makePath(wm.srcPath), dst)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="补充代码"><a href="#补充代码" class="headerlink" title="补充代码"></a>补充代码</h1><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getImage</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="params">(image.Image)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 水印图片</span></span><br><span class="line">	f, err := os.Open(s)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">"打开水印图片异常"</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> f.Close()</span><br><span class="line"></span><br><span class="line">	suffix := path.Ext(s)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> img image.Image</span><br><span class="line"></span><br><span class="line">	<span class="keyword">switch</span> suffix &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">".jpeg"</span>, <span class="string">".jpg"</span>:</span><br><span class="line">		fmt.Println(<span class="string">"这是JPG文件"</span>)</span><br><span class="line">		img, err = jpeg.Decode(f)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">"解码jpeg图片异常"</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	<span class="keyword">case</span> <span class="string">".png"</span>:</span><br><span class="line">		fmt.Println(<span class="string">"这是PNG文件"</span>)</span><br><span class="line">		img, err = png.Decode(f)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(<span class="string">"解码jpeg图片异常"</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> img</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">create</span><span class="params">(target <span class="keyword">string</span>, m image.Image)</span></span> &#123;</span><br><span class="line">	imgNew, err := os.Create(target)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> imgNew.Close()</span><br><span class="line"></span><br><span class="line">	suffix := path.Ext(target)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">switch</span> suffix &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">".jpeg"</span>, <span class="string">".jpg"</span>:</span><br><span class="line">		err = jpeg.Encode(imgNew, m, &amp;jpeg.Options&#123;<span class="number">100</span>&#125;)</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	<span class="keyword">case</span> <span class="string">".png"</span>:</span><br><span class="line">		err = png.Encode(imgNew, m)</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考内容"><a href="#参考内容" class="headerlink" title="参考内容"></a>参考内容</h1><blockquote>
+<p>水印<br><a href="http://www.nljb.net/default/Golang-绘图技术-image-draw-包介绍/" target="_blank" rel="noopener">http://www.nljb.net/default/Golang-绘图技术-image-draw-包介绍/</a><br><a href="https://blog.golang.org/go-imagedraw-package" target="_blank" rel="noopener">https://blog.golang.org/go-imagedraw-package</a><br><a href="https://golang.org/doc/progs/image_draw.go" target="_blank" rel="noopener">https://golang.org/doc/progs/image_draw.go</a><br><a href="https://studygolang.com/articles/12049" target="_blank" rel="noopener">https://studygolang.com/articles/12049</a><br>文字<br><a href="https://github.com/golang/freetype" target="_blank" rel="noopener">https://github.com/golang/freetype</a></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">  -------------本文结束<i class="fa fa-anchor"></i>感谢您的阅读-------------  </div>
+    
+</div>
+      
+
+      
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/go/" rel="tag"># go</a>
+            
+              <a href="/tags/水印/" rel="tag"># 水印</a>
+            
+              <a href="/tags/image/" rel="tag"># image</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/类加载/classloader01/" rel="next" title="类加载总结">
+                  <i class="fa fa-chevron-left"></i> 类加载总结
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#输出文字图片"><span class="nav-number">1.</span> <span class="nav-text">输出文字图片</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#效果图："><span class="nav-number">1.1.</span> <span class="nav-text">效果图：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">1.2.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#输出图片水印"><span class="nav-number">2.</span> <span class="nav-text">输出图片水印</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#原图："><span class="nav-number">2.1.</span> <span class="nav-text">原图：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#效果图：-1"><span class="nav-number">2.2.</span> <span class="nav-text">效果图：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码-1"><span class="nav-number">2.3.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缩放图片"><span class="nav-number">3.</span> <span class="nav-text">缩放图片</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码-2"><span class="nav-number">3.1.</span> <span class="nav-text">代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#补充代码"><span class="nav-number">4.</span> <span class="nav-text">补充代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考内容"><span class="nav-number">5.</span> <span class="nav-text">参考内容</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/uploads/avatar.jpeg"
+      alt="包包">
+  <p class="site-author-name" itemprop="name">包包</p>
+  <div class="site-description" itemprop="description">趣味编码, 快乐生活</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/DogBaoBao" title="GitHub &rarr; https://github.com/DogBaoBao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/0402371cb293" title="简书 &rarr; https://www.jianshu.com/u/0402371cb293" rel="noopener" target="_blank"><i class="fa fa-fw fa-pencil"></i>简书</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">包包</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'd92585357b491ecd55b5',
+      clientSecret: '1b259f1cbd0a828b2da5b12811a0ecba5f59934c',
+      repo: 'gitalk',
+      owner: 'DogBaoBao',
+      admin: ['DogBaoBao'],
+      id: 'f1bc309584f9f85264184ac4fa831cab',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>

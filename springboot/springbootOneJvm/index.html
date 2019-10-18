@@ -57,22 +57,22 @@
 </script>
 
   <meta name="description" content="概述 当下作为Java开发人员，运行一个服务基本上都会直接基于springboot，因此启动N个服务是需要启动N个springboot程序的。特别在本地环境通过intellij运行多个服务的时候，会需要占用较大的资源，电脑往往会出现卡顿现象。 本文主要介绍如何通过启动一个（入口） main 方法来运行多个服务，从而提高本地的开发爽度。">
-<meta name="keywords" content="原创,classloader,记录,springboot">
+<meta name="keywords" content="原创,记录,springboot,classloader">
 <meta property="og:type" content="article">
 <meta property="og:title" content="多个springboot运行在同一个JVM">
-<meta property="og:url" content="https://blog.funnycode.cn/springboot/2019-09-28-springboot-one-jvm/index.html">
+<meta property="og:url" content="https://blog.funnycode.cn/springboot/springbootOneJvm/index.html">
 <meta property="og:site_name" content="DogBaoBao&#39;s Blog">
 <meta property="og:description" content="概述 当下作为Java开发人员，运行一个服务基本上都会直接基于springboot，因此启动N个服务是需要启动N个springboot程序的。特别在本地环境通过intellij运行多个服务的时候，会需要占用较大的资源，电脑往往会出现卡顿现象。 本文主要介绍如何通过启动一个（入口） main 方法来运行多个服务，从而提高本地的开发爽度。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://blog.funnycode.cn/.cn//software.jpg">
 <meta property="og:image" content="https://blog.funnycode.cn/.cn//first.jpg">
 <meta property="og:image" content="https://blog.funnycode.cn/.cn//second.jpg">
-<meta property="og:updated_time" content="2019-10-07T07:30:02.987Z">
+<meta property="og:updated_time" content="2019-10-17T03:29:49.844Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多个springboot运行在同一个JVM">
 <meta name="twitter:description" content="概述 当下作为Java开发人员，运行一个服务基本上都会直接基于springboot，因此启动N个服务是需要启动N个springboot程序的。特别在本地环境通过intellij运行多个服务的时候，会需要占用较大的资源，电脑往往会出现卡顿现象。 本文主要介绍如何通过启动一个（入口） main 方法来运行多个服务，从而提高本地的开发爽度。">
 <meta name="twitter:image" content="https://blog.funnycode.cn/.cn//software.jpg">
-  <link rel="canonical" href="https://blog.funnycode.cn/springboot/2019-09-28-springboot-one-jvm/">
+  <link rel="canonical" href="https://blog.funnycode.cn/springboot/springbootOneJvm/">
 
 
 <script id="page-configurations">
@@ -269,7 +269,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/springboot/2019-09-28-springboot-one-jvm/">
+    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/springboot/springbootOneJvm/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="包包">
@@ -308,7 +308,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-07 15:30:02" itemprop="dateModified" datetime="2019-10-07T15:30:02+08:00">2019-10-07</time>
+                <time title="修改时间：2019-10-17 11:29:49" itemprop="dateModified" datetime="2019-10-17T11:29:49+08:00">2019-10-17</time>
               </span>
             
           
@@ -427,11 +427,11 @@
             
               <a href="/tags/原创/" rel="tag"># 原创</a>
             
-              <a href="/tags/classloader/" rel="tag"># classloader</a>
-            
               <a href="/tags/记录/" rel="tag"># 记录</a>
             
               <a href="/tags/springboot/" rel="tag"># springboot</a>
+            
+              <a href="/tags/classloader/" rel="tag"># classloader</a>
             
           </div>
         
@@ -441,7 +441,7 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/netty/2019-09-25-netty-qwzn-client/" rel="next" title="Netty权威指南-客户端创建">
+                <a href="/netty/netty-qwzn-client/" rel="next" title="Netty权威指南-客户端创建">
                   <i class="fa fa-chevron-left"></i> Netty权威指南-客户端创建
                 </a>
               
@@ -451,8 +451,8 @@
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/类加载/2019-10-07-class-loader-01/" rel="prev" title="类加载">
-                  类加载 <i class="fa fa-chevron-right"></i>
+                <a href="/类加载/classloader01/" rel="prev" title="类加载总结">
+                  类加载总结 <i class="fa fa-chevron-right"></i>
                 </a>
               
             </div>
@@ -523,7 +523,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -536,7 +536,7 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -549,7 +549,7 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
@@ -708,7 +708,7 @@
       repo: 'gitalk',
       owner: 'DogBaoBao',
       admin: ['DogBaoBao'],
-      id: '606a9569fa34a5f5a967a73b08a8170c',
+      id: '56490c4c205b12737f433e26d8095cab',
         language: 'zh-CN',
       
       distractionFreeMode: 'true'
