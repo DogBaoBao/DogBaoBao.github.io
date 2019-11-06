@@ -56,19 +56,19 @@
   };
 </script>
 
-  <meta name="description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。 问题说明伪代码如下：123456789101112131415161718192021222324class CServi">
+  <meta name="description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。">
 <meta name="keywords" content="原创,transaction,事务,记录">
 <meta property="og:type" content="article">
 <meta property="og:title" content="事务采坑记录01">
 <meta property="og:url" content="https://blog.funnycode.cn/spring/transaction-action-01/index.html">
 <meta property="og:site_name" content="DogBaoBao&#39;s Blog">
-<meta property="og:description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。 问题说明伪代码如下：123456789101112131415161718192021222324class CServi">
+<meta property="og:description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2019/png/327432/1569381660979-c364f0c7-4a84-46e8-bbd7-2d4d81207f52.png">
 <meta property="og:updated_time" content="2019-10-20T23:16:27.355Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="事务采坑记录01">
-<meta name="twitter:description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。 问题说明伪代码如下：123456789101112131415161718192021222324class CServi">
+<meta name="twitter:description" content="故事原由最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。">
 <meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2019/png/327432/1569381660979-c364f0c7-4a84-46e8-bbd7-2d4d81207f52.png">
   <link rel="canonical" href="https://blog.funnycode.cn/spring/transaction-action-01/">
 
@@ -343,9 +343,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="故事原由"><a href="#故事原由" class="headerlink" title="故事原由"></a>故事原由</h1><p>最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。 </p><h1 id="问题说明"><a href="#问题说明" class="headerlink" title="问题说明"></a>问题说明</h1><p>伪代码如下：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> BService bService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> AService aService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">(String value)</span> </span>&#123;</span><br><span class="line">        String result = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// ......</span></span><br><span class="line">            result = bService.<span class="keyword">do</span>();</span><br><span class="line">            aService.<span class="keyword">do</span>();</span><br><span class="line">            <span class="comment">// ......</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
-
-
+        <h1 id="故事原由"><a href="#故事原由" class="headerlink" title="故事原由"></a>故事原由</h1><p>最近有个同事在使用开放平台透出去自己方法的时候，开放平台返回出来了异常。一开始问我的时候，因为用到了RPC的泛化调用，我和他还扯了一会的泛化的异常处理逻辑。等忙完自己的事情后，我仔细查跟他的代码走了下，发现事务有嵌套关系，突然我就意识到了事务的一个常识，在这里记录下。 </p><a id="more"></a>
+<h1 id="问题说明"><a href="#问题说明" class="headerlink" title="问题说明"></a>问题说明</h1><p>伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> BService bService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> AService aService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">(String value)</span> </span>&#123;</span><br><span class="line">        String result = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// ......</span></span><br><span class="line">            result = bService.<span class="keyword">do</span>();</span><br><span class="line">            aService.<span class="keyword">do</span>();</span><br><span class="line">            <span class="comment">// ......</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>疑惑的点在于我都  <code>try...catch</code>  住了，为何还会出现异常？这个问题通过阅读事务的源码可以让人豁然开朗。</p>
 <h1 id="复现问题的Demo"><a href="#复现问题的Demo" class="headerlink" title="复现问题的Demo"></a>复现问题的Demo</h1><p>定义一个3个Service类，AService、BService、CService，在controller调用CService的方法execute，然后CService里面对数据库做一次更新，再调用BService和AService的方法，其中某个方法里面发生异常。</p>
@@ -550,7 +550,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -576,7 +576,7 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>

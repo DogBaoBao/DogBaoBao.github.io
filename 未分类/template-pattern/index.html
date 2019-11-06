@@ -56,19 +56,19 @@
   };
 </script>
 
-  <meta name="description" content="步骤1 用户线程创建 Bootstrap 实例，通过 API 设置创建客户端相关的参数，异步发起客户端连接步骤2 创建处理客户端连接、 I/O 读写的 Reactor 线程组 NioEventLoopGroup 。可以通过构造函数指定 I/O 线程的个数，默认为 CPU 内核数的2倍">
-<meta name="keywords" content="原创,netty客户端,netty,学习">
+  <meta name="description" content="[go] Template Pattern">
+<meta name="keywords" content="Java, K8s, Go, Framework">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Netty权威指南-客户端创建">
-<meta property="og:url" content="https://blog.funnycode.cn/netty/netty-qwzn-client/index.html">
+<meta property="og:title" content="design_patterns_template_method">
+<meta property="og:url" content="https://blog.funnycode.cn/未分类/template-pattern/index.html">
 <meta property="og:site_name" content="DogBaoBao&#39;s Blog">
-<meta property="og:description" content="步骤1 用户线程创建 Bootstrap 实例，通过 API 设置创建客户端相关的参数，异步发起客户端连接步骤2 创建处理客户端连接、 I/O 读写的 Reactor 线程组 NioEventLoopGroup 。可以通过构造函数指定 I/O 线程的个数，默认为 CPU 内核数的2倍">
+<meta property="og:description" content="[go] Template Pattern">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-20T23:16:08.042Z">
+<meta property="og:updated_time" content="2019-11-06T07:21:06.605Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Netty权威指南-客户端创建">
-<meta name="twitter:description" content="步骤1 用户线程创建 Bootstrap 实例，通过 API 设置创建客户端相关的参数，异步发起客户端连接步骤2 创建处理客户端连接、 I/O 读写的 Reactor 线程组 NioEventLoopGroup 。可以通过构造函数指定 I/O 线程的个数，默认为 CPU 内核数的2倍">
-  <link rel="canonical" href="https://blog.funnycode.cn/netty/netty-qwzn-client/">
+<meta name="twitter:title" content="design_patterns_template_method">
+<meta name="twitter:description" content="[go] Template Pattern">
+  <link rel="canonical" href="https://blog.funnycode.cn/未分类/template-pattern/">
 
 
 <script id="page-configurations">
@@ -82,7 +82,7 @@
   };
 </script>
 
-  <title>Netty权威指南-客户端创建 | DogBaoBao's Blog</title>
+  <title>design_patterns_template_method | DogBaoBao's Blog</title>
   
 
 
@@ -265,7 +265,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/netty/netty-qwzn-client/">
+    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/未分类/template-pattern/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="包包">
@@ -277,7 +277,7 @@
       <meta itemprop="name" content="DogBaoBao's Blog">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Netty权威指南-客户端创建
+        <h1 class="post-title" itemprop="name headline">design_patterns_template_method
 
           
         </h1>
@@ -293,7 +293,7 @@
                 
               
 
-              <time title="创建时间：2019-09-25 22:17:33" itemprop="dateCreated datePublished" datetime="2019-09-25T22:17:33+08:00">2019-09-25</time>
+              <time title="创建时间：2019-11-04 17:00:37" itemprop="dateCreated datePublished" datetime="2019-11-04T17:00:37+08:00">2019-11-04</time>
             </span>
           
             
@@ -304,22 +304,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-10-21 07:16:08" itemprop="dateModified" datetime="2019-10-21T07:16:08+08:00">2019-10-21</time>
+                <time title="修改时间：2019-11-06 15:21:06" itemprop="dateModified" datetime="2019-11-06T15:21:06+08:00">2019-11-06</time>
               </span>
             
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/netty/" itemprop="url" rel="index"><span itemprop="name">netty</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -341,13 +328,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>步骤1 用户线程创建 Bootstrap 实例，通过 API 设置创建客户端相关的参数，异步发起客户端连接<br>步骤2 创建处理客户端连接、 I/O 读写的 Reactor 线程组 NioEventLoopGroup 。可以通过构造函数指定 I/O 线程的个数，默认为 CPU 内核数的2倍</p><a id="more"></a>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The &#123;<span class="doctag">@link</span> EventLoopGroup&#125; which is used to handle all the events for the to-be-created</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> Channel&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> B <span class="title">group</span><span class="params">(EventLoopGroup group)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (group == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"group"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.group != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"group set already"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.group = group;</span><br><span class="line">    <span class="keyword">return</span> self();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>[go] Template Pattern</p>
+<a id="more"></a> 
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Allow to specify a &#123;<span class="doctag">@link</span> ChannelOption&#125; which is used for the &#123;<span class="doctag">@link</span> Channel&#125; instances once they got</span></span><br><span class="line"><span class="comment"> * created. Use a value of &#123;<span class="doctag">@code</span> null&#125; to remove a previous set &#123;<span class="doctag">@link</span> ChannelOption&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">B <span class="title">option</span><span class="params">(ChannelOption&lt;T&gt; option, T value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (option == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"option"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (options) &#123;</span><br><span class="line">            options.remove(option);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (options) &#123;</span><br><span class="line">            options.put(option, value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> self();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Template Pattern（模板模式）</p>
+<blockquote>
+<p>白话文<br>定一个“抽象类”，定义一个方法A，定义需要子类实现的方法，所有子类对象在执行A的时候，会调用各自实现的方法。</p>
+</blockquote>
+<p>在golang中，由于不存在抽象类和真正的继承，所以只能通过一个基础类来充当抽象类，子类通过组合基础类来实现通用方法的继承</p>
+<p>著作权归作者所有。<br>商业转载请联系作者获得授权,非商业转载请注明出处。<br>原文: <a href="https://chenwj93.github.io/2019/05/21/template-design.html" target="_blank" rel="noopener">https://chenwj93.github.io/2019/05/21/template-design.html</a></p>
+<blockquote>
+<p>故事<br>阳光明媚的一天，我家来了位香港的朋友（毕竟那边太乱），我们决定一起做一桌菜，于是他做香港菜，我做杭州菜，比拼就这么开始了</p>
+</blockquote>
+<h2 id="实际代码例子"><a href="#实际代码例子" class="headerlink" title="实际代码例子"></a>实际代码例子</h2><h3 id="普通例子"><a href="#普通例子" class="headerlink" title="普通例子"></a>普通例子</h3><blockquote>
+<p>代码</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"testing"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> AbstractCooking <span class="keyword">struct</span> &#123;</span><br><span class="line">	Prepare    <span class="function"><span class="keyword">func</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	<span class="title">GetContent</span> <span class="title">func</span><span class="params">()</span> <span class="title">string</span></span></span><br><span class="line"><span class="function">&#125;</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="params">(d AbstractCooking)</span> <span class="title">DoOperate</span><span class="params">()</span></span> &#123;</span><br><span class="line">	d.Prepare()</span><br><span class="line">	fmt.Println(<span class="string">"烹饪内容:"</span>, d.GetContent())</span><br><span class="line">	fmt.Println(<span class="string">"烹饪完成"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> ChinaCooking <span class="keyword">struct</span> &#123;</span><br><span class="line">	AbstractCooking</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewHZCooking</span><span class="params">()</span> *<span class="title">ChinaCooking</span></span> &#123;</span><br><span class="line">	c := <span class="built_in">new</span>(ChinaCooking)</span><br><span class="line">	c.AbstractCooking.GetContent = c.GetContent</span><br><span class="line">	c.AbstractCooking.Prepare = c.Prepare</span><br><span class="line">	<span class="keyword">return</span> c</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *ChinaCooking)</span> <span class="title">GetContent</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">"杭州菜."</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *ChinaCooking)</span> <span class="title">Prepare</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">" -- 准备杭州菜 -- "</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> HkCooking <span class="keyword">struct</span> &#123;</span><br><span class="line">	ChinaCooking</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewHKCooking</span><span class="params">()</span> *<span class="title">HkCooking</span></span> &#123;</span><br><span class="line">	c := <span class="built_in">new</span>(HkCooking)</span><br><span class="line">	c.AbstractCooking.GetContent = c.GetContent</span><br><span class="line">	c.AbstractCooking.Prepare = c.Prepare</span><br><span class="line">	<span class="keyword">return</span> c</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *HkCooking)</span> <span class="title">GetContent</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">"香港菜."</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *HkCooking)</span> <span class="title">Prepare</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">" -- 准备香港菜 -- "</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TestCooking</span><span class="params">(t *testing.T)</span></span> &#123;</span><br><span class="line">	chinaCooking := NewHZCooking()</span><br><span class="line"></span><br><span class="line">	chinaCooking.DoOperate()</span><br><span class="line"></span><br><span class="line">	hkCooking := NewHKCooking()</span><br><span class="line"></span><br><span class="line">	hkCooking.DoOperate()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>步骤3 通过 Bootstrap 的 ChannelFactory 和用户指定的 Channel 类型创建用于客户端连接的 NioSocketChannel ，它的功能类似于JDK NIO类库提供的 SocketChannel<br>步骤4 创建默认的 Channel Handler Piepline，用于调度和执行网络事件<br>步骤5 异步发起 TCP 连接，判断连接是否成功。如果成功，则直接将 NioSocketChannel 注册到多路复用器上，监听读操作位，用于数据报读取和消息发送；<br>如果没有立即连接成功，则注册连接监听位到多路复用器，等待连接结果<br>步骤6 注册对应到网络监听状态位到多路复用器<br>步骤7 由多路复用器在 I/O 现场中轮询各 Channel，处理连接结果<br>步骤8 如果连接成功，设置 Future 结果，发送连接成功事件，触发 ChannelPipeline 执行<br>步骤9 由 ChannelPipeline 调度执行系统和用户到 ChannelHandler，执行业务逻辑</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> port, <span class="keyword">final</span> String host)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    EventLoopGroup worker = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Bootstrap b = <span class="keyword">new</span> Bootstrap(); <span class="comment">// 1</span></span><br><span class="line">        b.group(worker) <span class="comment">// 2</span></span><br><span class="line">            .channel(NioSocketChannel.class)</span><br><span class="line">            .option(ChannelOption.TCP_NODELAY, <span class="keyword">true</span>)</span><br><span class="line">            .handler(<span class="keyword">new</span> ChannelInitializer&lt;Channel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(Channel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> StringDecoder());</span><br><span class="line">                    handlerAdapterMap.entrySet().stream()</span><br><span class="line">                        .forEach(handlerAdapter -&gt; ch.pipeline()</span><br><span class="line">                            .addLast(handlerAdapter.getKey(), handlerAdapter.getValue()));</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> StringEncoder());</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        ChannelFuture channelFuture = b.connect(host, port);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">5</span>);</span><br><span class="line">            channelFuture.channel().writeAndFlush(<span class="string">"filter result"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        worker.shutdownGracefully();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>输出结果</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> -- 准备中国菜 -- </span><br><span class="line">烹饪内容: 杭州菜.</span><br><span class="line"> -- 准备香港菜 -- </span><br><span class="line">烹饪内容: 香港菜.</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.tutorialspoint.com/design_pattern/template_pattern.htm" target="_blank" rel="noopener">https://www.tutorialspoint.com/design_pattern/template_pattern.htm</a></p>
+
     </div>
 
     
@@ -363,29 +367,14 @@
       
 
       <footer class="post-footer">
-          
-            
-          
-          <div class="post-tags">
-            
-              <a href="/tags/原创/" rel="tag"># 原创</a>
-            
-              <a href="/tags/netty客户端/" rel="tag"># netty客户端</a>
-            
-              <a href="/tags/netty/" rel="tag"># netty</a>
-            
-              <a href="/tags/学习/" rel="tag"># 学习</a>
-            
-          </div>
-        
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/spring/transaction-action-01/" rel="next" title="事务采坑记录01">
-                  <i class="fa fa-chevron-left"></i> 事务采坑记录01
+                <a href="/设计模式/decorator-pattern/" rel="next" title="装饰模式">
+                  <i class="fa fa-chevron-left"></i> 装饰模式
                 </a>
               
             </div>
@@ -393,10 +382,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/springboot/springbootOneJvm/" rel="prev" title="多个springboot运行在同一个JVM">
-                  多个springboot运行在同一个JVM <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -448,6 +433,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实际代码例子"><span class="nav-number">1.1.</span> <span class="nav-text">实际代码例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#普通例子"><span class="nav-number">1.1.1.</span> <span class="nav-text">普通例子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
@@ -649,7 +636,7 @@
       repo: 'gitalk',
       owner: 'DogBaoBao',
       admin: ['DogBaoBao'],
-      id: '6bbdfb796cd068eb031f3aeacad02689',
+      id: '7e47de5ec04e1c9c1b34bdc0674c9d6a',
         language: 'zh-CN',
       
       distractionFreeMode: 'true'
