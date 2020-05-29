@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-self-32x32.ico?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-self-16x16.ico?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+  <link rel="alternate" href="/atom.xml" title="DogBaoBao's Blog" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="本文介绍一个实际中可以使用的概念：Domain Primitive">
+<meta name="keywords" content="领域驱动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020-05-28-Domain_Primitive">
+<meta property="og:url" content="https://blog.funnycode.cn/领域驱动/2020-05-28-Domain-Primitive/index.html">
+<meta property="og:site_name" content="DogBaoBao&#39;s Blog">
+<meta property="og:description" content="本文介绍一个实际中可以使用的概念：Domain Primitive">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-05-28T13:58:01.175Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2020-05-28-Domain_Primitive">
+<meta name="twitter:description" content="本文介绍一个实际中可以使用的概念：Domain Primitive">
+  <link rel="canonical" href="https://blog.funnycode.cn/领域驱动/2020-05-28-Domain-Primitive/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>2020-05-28-Domain_Primitive | DogBaoBao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?0642718bc3eb379eadb47feaef4020ca";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <a href="https://github.com/DogBaoBao" target="_blank">
+      <img style="position: fixed; top: 0;right: 0;border: 0;z-index: 1" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1">
+    </a>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">DogBaoBao's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="https://blog.funnycode.cn/领域驱动/2020-05-28-Domain-Primitive/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="包包">
+      <meta itemprop="description" content="趣味编码, 快乐生活">
+      <meta itemprop="image" content="/uploads/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DogBaoBao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">2020-05-28-Domain_Primitive
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2020-05-28 20:13:43 / 修改时间：21:58:01" itemprop="dateCreated datePublished" datetime="2020-05-28T20:13:43+08:00">2020-05-28</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/领域驱动/" itemprop="url" rel="index"><span itemprop="name">领域驱动</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文介绍一个实际中可以使用的概念：Domain Primitive</p><a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>领域驱动这个概念也听到很多次了，书上看过的已经忘记，道听途说的不敢苟同（自己也分不清真假，听闻也没一个真正”成功“的案例），这里我就说一句我的理解：深入挖掘业务内核，找到问题的根本，把复杂问题分为多个领域（领域内聚）去解决业务实际的问题，而不是通过技术角度随着岁月留下一堆跳跃的代码。</p>
+<h1 id="本文主角-Domain-Primitive"><a href="#本文主角-Domain-Primitive" class="headerlink" title="本文主角 Domain Primitive"></a>本文主角 Domain Primitive</h1><p>一 Domain Primitive 的定义</p>
+<blockquote>
+<p>不从任何其他事物发展而来<br>初级的形成或生长的早期阶段</p>
+</blockquote>
+<p>让我们重新来定义一下 Domain Primitive ：Domain Primitive 是一个在特定领域里，拥有精准定义的、可自我验证的、拥有行为的 Value Object 。</p>
+<p>• DP是一个传统意义上的Value Object，拥有Immutable的特性<br>• DP是一个完整的概念整体，拥有精准定义<br>• DP使用业务域中的原生语言<br>• DP可以是业务域的最小组成部分、也可以构建复杂组合</p>
+<p>注：Domain Primitive的概念和命名来自于Dan Bergh Johnsson &amp; Daniel Deogun的书 Secure by Design。</p>
+<p>二 使用 Domain Primitive 的三原则</p>
+<p>• 让隐性的概念<strong>显性</strong>化<br>• 让隐性的上下文<strong>显性</strong>化<br>• 封装多对象行为</p>
+<p>三 Domain Primitive 和 DDD 里 Value Object 的区别</p>
+<p>在 DDD 中， Value Object 这个概念其实已经存在：</p>
+<p>• 在 Evans 的 DDD 蓝皮书中，Value Object 更多的是一个非 Entity 的值对象<br>• 在Vernon的IDDD红皮书中，作者更多的关注了Value Object的Immutability、Equals方法、Factory方法等</p>
+<p>Domain Primitive 是 Value Object 的进阶版，在原始 VO 的基础上要求每个 DP 拥有概念的整体，而不仅仅是值对象。在 VO 的 Immutable 基础上增加了 Validity 和行为。当然同样的要求无副作用（side-effect free）。</p>
+<p>▍Domain Primitive 和 Data Transfer Object (DTO) 的区别</p>
+<p>在日常开发中经常会碰到的另一个数据结构是 DTO ，比如方法的入参和出参。DP 和 DTO 的区别如下：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>DTO</th>
+<th>DP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>功能</td>
+<td>数据传输<br>属于技术细节</td>
+<td>业务领域中的概念</td>
+</tr>
+<tr>
+<td>数据的关联</td>
+<td>只是一堆数据放在一起<br>不一定有关联度</td>
+<td>数据之间的高相关新</td>
+</tr>
+<tr>
+<td>行为</td>
+<td>无行为</td>
+<td>丰富的行为和业务逻辑</td>
+</tr>
+</tbody></table>
+<p>四 什么情况下应该用 Domain Primitive</p>
+<p>常见的 DP 的使用场景包括：</p>
+<p>• 有格式限制的 String：比如Name，PhoneNumber，OrderNumber，ZipCode，Address等<br>• 有限制的Integer：比如OrderId（&gt;0），Percentage（0-100%），Quantity（&gt;=0）等<br>• 可枚举的 int ：比如 Status（一般不用Enum因为反序列化问题）<br>• Double 或 BigDecimal：一般用到的 Double 或 BigDecimal 都是有业务含义的，比如 Temperature、Money、Amount、ExchangeRate、Rating 等<br>• 复杂的数据结构：比如 Map&gt; 等，尽量能把 Map 的所有操作包装掉，仅暴露必要行为</p>
+<h1 id="项目的的尝试"><a href="#项目的的尝试" class="headerlink" title="项目的的尝试"></a>项目的的尝试</h1><p>举例子：</p>
+<p>DP对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@JSONType</span>(deserializer = NameDeserializer.class, serializer = NameSerializer.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Name</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">7482387369308807214L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Name</span><span class="params">(<span class="keyword">final</span> String name)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isBlank(name)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ValidationException(<span class="string">"名称不能为空!!!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!isValid(name)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ValidationException(<span class="string">"仅支持1-64位大小写字母，数字，中划线和下划线组成，必须字母开头!!!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String code)</span> </span>&#123;</span><br><span class="line">        String pattern = <span class="string">"^[a-zA-Z][a-zA-Z0-9_-]&#123;1,64&#125;$"</span>;</span><br><span class="line">        <span class="keyword">return</span> code.matches(pattern);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>领域方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根据应用和Git信息查询流水线发布记录</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> PipelineDO <span class="title">queryByAppAndGit</span><span class="params">(<span class="keyword">final</span> Name appName, <span class="keyword">final</span> Git git)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 进行逻辑处理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说明</p>
+<ul>
+<li>final 修饰字段，不可变性的特点</li>
+<li>构造方法就直接校验合法性，不需要factory和validutil，更内聚自己的功能</li>
+<li>因为存在JSON序列化和反序列的情况，这里需要自定义序列化和反序列的方法</li>
+</ul>
+<p>效果</p>
+<ul>
+<li>前端联调企图传随便的内容进来，直接通不过参数校验，就进不到核心方法了</li>
+<li>参数相对更能直观其意，并且进来的参数值取出来肯定是合法的</li>
+<li>代码可以写的更少</li>
+</ul>
+<p>容易出错的地方</p>
+<ul>
+<li>如果用Map做一个缓存，Key放String，而实际对应的是Code对象，那么查询的时候要用code.genCodeString()，一开始容易写code忘记转换，导致查询不到结果</li>
+<li>JSON转换在上面已经提到了需要自己定义扩展，会增加一定的重复代码量（我们暂时用的是每个DP类型两个转换类，可以合并到一个方法，根据类型判断，但是语义不够清晰</li>
+</ul>
+<p>还没做好的地方</p>
+<ul>
+<li>如果通过jar包提供给第三方接口调用也使用这个DP类，那么接口调用方传参不合法的时候就会报错</li>
+</ul>
+<h1 id="学习文档"><a href="#学习文档" class="headerlink" title="学习文档"></a>学习文档</h1><p>本文也主要为了记录下这篇好文 <a href="https://developer.aliyun.com/article/716908?spm=a2c6h.12873581.0.0.41f165c3iAKf34&amp;groupCode=taobaotech" target="_blank" rel="noopener">https://developer.aliyun.com/article/716908?spm=a2c6h.12873581.0.0.41f165c3iAKf34&amp;groupCode=taobaotech</a></p>
+<h1 id="工作中的日常吐槽"><a href="#工作中的日常吐槽" class="headerlink" title="工作中的日常吐槽"></a>工作中的日常吐槽</h1><blockquote>
+<p>和本文无关</p>
+</blockquote>
+<p>项目接口定义的参数是page和length，进行联调的过程中，前端同学钉钉发来问page是否是0，10，20？，这让我楞了一下，怎么页码无中生有起飞了，于是找前端同学沟通了解到page对他们来讲起始位置（他们之前一直是这样做的，说让后端方便点），我心里想怎么把limit给搞出来了，涨见识了。</p>
+<p>因为前端告知比较麻烦，乐于助人的我就上线了，我第一时间考虑用构造函数接受这两个参数处理，但是我之前把分页对象的属性抽象到了QueryParams，让所有的BaseEntity都继承了，我用了实体对象就没法通过构造函数，委屈求全临时加了个属性去操作，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 起始位置，为前端特意定制</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">protected</span> Integer startIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 必须用在 setPageSize 之后</span></span><br><span class="line"><span class="comment"> * 设置分页起始位置</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> startIndex 分页起始位置</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setStartIndex</span><span class="params">(Integer startIndex)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.startIndex = startIndex;</span><br><span class="line">    pageNumber();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">pageNumber</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 0的话不用处理</span></span><br><span class="line">    <span class="keyword">if</span> (startIndex &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        startIndex = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (startIndex % pageSize != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"非法的分页起始位置"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算页码</span></span><br><span class="line">    <span class="keyword">this</span>.pageNumber = startIndex / pageSize + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">  -------------本文结束<i class="fa fa-anchor"></i>感谢您的阅读-------------  </div>
+    
+</div>
+      
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/领域驱动/" rel="tag"># 领域驱动</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/杂记/2020-05-19-五年回顾杂记/" rel="next" title="2020-05-19-五年回顾杂记">
+                  <i class="fa fa-chevron-left"></i> 2020-05-19-五年回顾杂记
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="gitalk-container"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本文主角-Domain-Primitive"><span class="nav-number">2.</span> <span class="nav-text">本文主角 Domain Primitive</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目的的尝试"><span class="nav-number">3.</span> <span class="nav-text">项目的的尝试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#学习文档"><span class="nav-number">4.</span> <span class="nav-text">学习文档</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#工作中的日常吐槽"><span class="nav-number">5.</span> <span class="nav-text">工作中的日常吐槽</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/uploads/avatar.jpeg"
+      alt="包包">
+  <p class="site-author-name" itemprop="name">包包</p>
+  <div class="site-description" itemprop="description">趣味编码, 快乐生活</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/DogBaoBao" title="GitHub &rarr; https://github.com/DogBaoBao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://www.jianshu.com/u/0402371cb293" title="简书 &rarr; https://www.jianshu.com/u/0402371cb293" rel="noopener" target="_blank"><i class="fa fa-fw fa-pencil"></i>简书</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"><a href="http://www.beian.miit.gov.cn" rel="noopener" target="_blank">浙ICP备17037814号-1 </a><span><img src="/images/备案图标.png" style="display:inline-block;"/>
+  
+  <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=http://www.beian.miit.gov.cn" rel="noopener" target="_blank">浙ICP备17037814号 </a>&copy; 2016 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">包包</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+    
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/pisces.js?v=7.4.0"></script>
+
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'd92585357b491ecd55b5',
+      clientSecret: '1b259f1cbd0a828b2da5b12811a0ecba5f59934c',
+      repo: 'gitalk',
+      owner: 'DogBaoBao',
+      admin: ['DogBaoBao'],
+      id: 'f3ca6c84cb3f8574abacedbb4bc416d1',
+        language: 'zh-CN',
+      
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+</body>
+</html>

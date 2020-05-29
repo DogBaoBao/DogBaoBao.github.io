@@ -57,14 +57,14 @@
 </script>
 
   <meta name="description" content="[netty] 学习Netty-客户端创建">
-<meta name="keywords" content="netty,原创,netty客户端,学习">
+<meta name="keywords" content="netty客户端,netty,学习,原创">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Netty权威指南-客户端创建">
 <meta property="og:url" content="https://blog.funnycode.cn/netty/netty-qwzn-client/index.html">
 <meta property="og:site_name" content="DogBaoBao&#39;s Blog">
 <meta property="og:description" content="[netty] 学习Netty-客户端创建">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-27T07:11:50.089Z">
+<meta property="og:updated_time" content="2020-05-28T14:29:48.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Netty权威指南-客户端创建">
 <meta name="twitter:description" content="[netty] 学习Netty-客户端创建">
@@ -304,7 +304,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-27 15:11:50" itemprop="dateModified" datetime="2019-11-27T15:11:50+08:00">2019-11-27</time>
+                <time title="修改时间：2020-05-28 22:29:48" itemprop="dateModified" datetime="2020-05-28T22:29:48+08:00">2020-05-28</time>
               </span>
             
           
@@ -351,6 +351,11 @@
 
 <p>步骤3 通过 Bootstrap 的 ChannelFactory 和用户指定的 Channel 类型创建用于客户端连接的 NioSocketChannel ，它的功能类似于JDK NIO类库提供的 SocketChannel<br>步骤4 创建默认的 Channel Handler Piepline，用于调度和执行网络事件<br>步骤5 异步发起 TCP 连接，判断连接是否成功。如果成功，则直接将 NioSocketChannel 注册到多路复用器上，监听读操作位，用于数据报读取和消息发送；<br>如果没有立即连接成功，则注册连接监听位到多路复用器，等待连接结果<br>步骤6 注册对应到网络监听状态位到多路复用器<br>步骤7 由多路复用器在 I/O 现场中轮询各 Channel，处理连接结果<br>步骤8 如果连接成功，设置 Future 结果，发送连接成功事件，触发 ChannelPipeline 执行<br>步骤9 由 ChannelPipeline 调度执行系统和用户到 ChannelHandler，执行业务逻辑</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> port, <span class="keyword">final</span> String host)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    EventLoopGroup worker = <span class="keyword">new</span> NioEventLoopGroup();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Bootstrap b = <span class="keyword">new</span> Bootstrap(); <span class="comment">// 1</span></span><br><span class="line">        b.group(worker) <span class="comment">// 2</span></span><br><span class="line">            .channel(NioSocketChannel.class)</span><br><span class="line">            .option(ChannelOption.TCP_NODELAY, <span class="keyword">true</span>)</span><br><span class="line">            .handler(<span class="keyword">new</span> ChannelInitializer&lt;Channel&gt;() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initChannel</span><span class="params">(Channel ch)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> StringDecoder());</span><br><span class="line">                    handlerAdapterMap.entrySet().stream()</span><br><span class="line">                        .forEach(handlerAdapter -&gt; ch.pipeline()</span><br><span class="line">                            .addLast(handlerAdapter.getKey(), handlerAdapter.getValue()));</span><br><span class="line">                    ch.pipeline().addLast(<span class="keyword">new</span> StringEncoder());</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        ChannelFuture channelFuture = b.connect(host, port);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">5</span>);</span><br><span class="line">            channelFuture.channel().writeAndFlush(<span class="string">"filter result"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        worker.shutdownGracefully();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p> 未完，有空待续，尴尬</p>
+</blockquote>
+
     </div>
 
     
@@ -371,13 +376,13 @@
           
           <div class="post-tags">
             
-              <a href="/tags/netty/" rel="tag"># netty</a>
-            
-              <a href="/tags/原创/" rel="tag"># 原创</a>
-            
               <a href="/tags/netty客户端/" rel="tag"># netty客户端</a>
             
+              <a href="/tags/netty/" rel="tag"># netty</a>
+            
               <a href="/tags/学习/" rel="tag"># 学习</a>
+            
+              <a href="/tags/原创/" rel="tag"># 原创</a>
             
           </div>
         
@@ -467,7 +472,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -480,7 +485,7 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -493,7 +498,7 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>

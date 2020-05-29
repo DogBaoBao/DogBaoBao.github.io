@@ -57,14 +57,14 @@
 </script>
 
   <meta name="description" content="[数据同步] 无可奈何之RDS的binlog丢失啦">
-<meta name="keywords" content="otter,canal,mysql,binlog,阿里云RDS,原创">
+<meta name="keywords" content="原创,otter,canal,mysql,binlog,阿里云RDS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="阿里云RDS采坑记录01">
 <meta property="og:url" content="https://blog.funnycode.cn/数据同步/aliyun-rds-error-01/index.html">
 <meta property="og:site_name" content="DogBaoBao&#39;s Blog">
 <meta property="og:description" content="[数据同步] 无可奈何之RDS的binlog丢失啦">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-08T03:25:29.594Z">
+<meta property="og:updated_time" content="2020-05-28T14:31:43.080Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="阿里云RDS采坑记录01">
 <meta name="twitter:description" content="[数据同步] 无可奈何之RDS的binlog丢失啦">
@@ -304,7 +304,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-08 11:25:29" itemprop="dateModified" datetime="2019-11-08T11:25:29+08:00">2019-11-08</time>
+                <time title="修改时间：2020-05-28 22:31:43" itemprop="dateModified" datetime="2020-05-28T22:31:43+08:00">2020-05-28</time>
               </span>
             
           
@@ -373,7 +373,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- 保留时长：默认值为18，表示实例空间内默认保存最近18个小时内的Binlog文件，18个小时之前的日志将在备份后（需要开启日志备份）清理。保留时长可选范围值为0~7*24小时。</span><br><span class="line">- 空间使用率不超过：默认值为30%，表示本地Binlog空间使用率大于30%时，系统会从最早的Binlog开始清理，直到空间使用率低于30%。空间使用率不超过可选范围值为0 - 50% 。</span><br><span class="line">- 可用空间保护，默认开启该功能，表示当实例总空间使用率超过80%或实例剩余可用空间不足5GB时，会强制从最早的Binlog开始清理，直到总空间使用率降到80%以下且实例剩余可用空间大于5GB。</span><br></pre></td></tr></table></figure>
 
 <p>我们可以看到RDS默认保留时间小于一天，所以我们停了一天后再度开启，导致binlog位置找不到，只能从最新的偏移量同步。这里首先把保留时长调至3天（我们的同步服务不可能停3天，在某些改造项目，同步服务可能会停1-2天），这个需要根据实际场景去设置合理的值。</p>
-<h2 id="binlog不在了，如何补救？"><a href="#binlog不在了，如何补救？" class="headerlink" title="binlog不在了，如何补救？"></a>binlog不在了，如何补救？</h2><p>阿里云会把binlog保存到OSS，从OSS下载回来binlog，然后把binlog设置到MySQL指定位置。这块有任何问题可以提工单，毕竟顾客是“上帝”</p>
+<h2 id="binlog不在了，如何补救？"><a href="#binlog不在了，如何补救？" class="headerlink" title="binlog不在了，如何补救？"></a>binlog不在了，如何补救？</h2><p>阿里云会把binlog保存到OSS，从OSS下载回来binlog，然后把binlog设置到MySQL指定位置（这块可能是我脑补的）。这块有任何问题可以提工单，毕竟顾客是“上帝”。</p>
 <p>本机位置是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/mysql/data</span><br></pre></td></tr></table></figure>
     </div>
@@ -396,6 +396,8 @@
           
           <div class="post-tags">
             
+              <a href="/tags/原创/" rel="tag"># 原创</a>
+            
               <a href="/tags/otter/" rel="tag"># otter</a>
             
               <a href="/tags/canal/" rel="tag"># canal</a>
@@ -405,8 +407,6 @@
               <a href="/tags/binlog/" rel="tag"># binlog</a>
             
               <a href="/tags/阿里云RDS/" rel="tag"># 阿里云RDS</a>
-            
-              <a href="/tags/原创/" rel="tag"># 原创</a>
             
           </div>
         
@@ -494,7 +494,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -507,7 +507,7 @@
             <a href="/categories/">
           
         
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span>
         </a>
       </div>
@@ -520,7 +520,7 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span>
         </a>
       </div>
